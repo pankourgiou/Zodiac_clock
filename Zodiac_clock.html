@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zodiac Signs Clock</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #020a0f, #000000 80%);
+    font-family: "Orbitron", sans-serif;
+    overflow: hidden;
+  }
+
+  .container {
+    position: relative;
+  }
+
+  canvas {
+    filter: drop-shadow(0 0 25px #00ffff);
+  }
+
+  .title {
+    position: absolute;
+    top: -50px;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+  }
+
+  .aura {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,255,255,0.15), transparent 70%);
+    animation: pulse 4s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% {opacity: 0.4;}
+    50% {opacity: 1;}
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="title">👽ZODIAC SIGNS CLOCK 👽</div>
+  <div class="aura"></div>
+  <canvas id="clock" width="450" height="450"></canvas>
+</div>
+
+<script>
+const canvas = document.getElementById("clock");
+const ctx = canvas.getContext("2d");
+
+const center = canvas.width / 2;
+const radius = 170;
+
+const symbols = ["♓︎","♈︎","♉︎","♊︎","♋︎","♌︎","♍︎","♎︎","♏︎","♐︎","♑︎","♒︎"];
+
+function drawClock() {
+  const now = new Date();
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.save();
+  ctx.translate(center, center);
+
+  // outer alien ring
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
+  ctx.strokeStyle = "#00ffff";
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "#00ffff";
+  ctx.stroke();
+
+  // glowing ticks
+  for (let i = 0; i < 60; i++) {
+    const angle = (Math.PI / 30) * i;
+    const r1 = radius - 10;
+    const r2 = i % 5 === 0 ? radius - 25 : radius - 15;
+
+    ctx.beginPath();
+    ctx.moveTo(r1 * Math.cos(angle), r1 * Math.sin(angle));
+    ctx.lineTo(r2 * Math.cos(angle), r2 * Math.sin(angle));
+    ctx.strokeStyle = "#00ffee";
+    ctx.lineWidth = i % 5 === 0 ? 2 : 1;
+    ctx.stroke();
+  }
+
+  // alien zodiac symbols
+  ctx.font = "22px Orbitron";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  for (let i = 0; i < 12; i++) {
+    const angle = (Math.PI / 6) * i - Math.PI / 2;
+    const x = (radius - 45) * Math.cos(angle);
+    const y = (radius - 45) * Math.sin(angle);
+
+    ctx.fillStyle = "#00ffff";
+    ctx.shadowBlur = 15;
+    ctx.fillText(symbols[i], x, y);
+  }
+
+  const hour = now.getHours() % 12 + now.getMinutes() / 60;
+  const minute = now.getMinutes();
+  const second = now.getSeconds();
+
+  // hour hand
+  let angle = (Math.PI / 6) * hour - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(80 * Math.cos(angle), 80 * Math.sin(angle));
+  ctx.strokeStyle = "#ff0077";
+  ctx.lineWidth = 6;
+  ctx.shadowColor = "#ff0077";
+  ctx.shadowBlur = 25;
+  ctx.stroke();
+
+  // minute hand
+  angle = (Math.PI / 30) * minute - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(120 * Math.cos(angle), 120 * Math.sin(angle));
+  ctx.strokeStyle = "#00aaff";
+  ctx.lineWidth = 3;
+  ctx.shadowColor = "#00aaff";
+  ctx.shadowBlur = 20;
+  ctx.stroke();
+
+  // second hand
+  angle = (Math.PI / 30) * second - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(145 * Math.cos(angle), 145 * Math.sin(angle));
+  ctx.strokeStyle = "#00ff88";
+  ctx.lineWidth = 2;
+  ctx.shadowColor = "#00ff88";
+  ctx.shadowBlur = 20;
+  ctx.stroke();
+
+  // center core
+  ctx.beginPath();
+  ctx.arc(0, 0, 7, 0, Math.PI * 2);
+  ctx.fillStyle = "white";
+  ctx.fill();
+
+  ctx.restore();
+}
+
+setInterval(drawClock, 1000);
+drawClock();
+</script>
+
+</body>
+</html>
