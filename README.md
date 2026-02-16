@@ -1,1 +1,1 @@
-It's a simple python program using zodiac signs to show time. 
+It's a simple html program using zodiac signs to show time. 
